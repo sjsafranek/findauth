@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>FIND :: Map</title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+        <!--  Leaflet.draw-master  -->
+        <script src="/static/Leaflet.draw-master/libs/leaflet-src.js"></script>
+        <link rel="stylesheet" href="/static/Leaflet.draw-master/libs/leaflet.css" />
+
+        <script src="/static/Leaflet.draw-master/src/Leaflet.draw.js"></script>
+        <link rel="stylesheet" href="/static/Leaflet.draw-master/dist/leaflet.draw.css" />
+
+        <script src="/static/Leaflet.draw-master/src/Toolbar.js"></script>
+        <script src="/static/Leaflet.draw-master/src/Tooltip.js"></script>
+
+        <script src="/static/Leaflet.draw-master/src/ext/GeometryUtil.js"></script>
+        <script src="/static/Leaflet.draw-master/src/ext/LatLngUtil.js"></script>
+        <script src="/static/Leaflet.draw-master/src/ext/LineUtil.Intersect.js"></script>
+        <script src="/static/Leaflet.draw-master/src/ext/Polygon.Intersect.js"></script>
+        <script src="/static/Leaflet.draw-master/src/ext/Polyline.Intersect.js"></script>
+
+        <script src="/static/Leaflet.draw-master/src/draw/DrawToolbar.js"></script>
+        <script src="/static/Leaflet.draw-master/src/draw/handler/Draw.Feature.js"></script>
+        <script src="/static/Leaflet.draw-master/src/draw/handler/Draw.SimpleShape.js"></script>
+        <script src="/static/Leaflet.draw-master/src/draw/handler/Draw.Polyline.js"></script>
+        <script src="/static/Leaflet.draw-master/src/draw/handler/Draw.Circle.js"></script>
+        <script src="/static/Leaflet.draw-master/src/draw/handler/Draw.Marker.js"></script>
+        <script src="/static/Leaflet.draw-master/src/draw/handler/Draw.Polygon.js"></script>
+        <script src="/static/Leaflet.draw-master/src/draw/handler/Draw.Rectangle.js"></script>
+
+        <script src="/static/Leaflet.draw-master/src/edit/EditToolbar.js"></script>
+        <script src="/static/Leaflet.draw-master/src/edit/handler/EditToolbar.Edit.js"></script>
+        <script src="/static/Leaflet.draw-master/src/edit/handler/EditToolbar.Delete.js"></script>
+
+        <script src="/static/Leaflet.draw-master/src/Control.Draw.js"></script>
+
+        <script src="/static/Leaflet.draw-master/src/edit/handler/Edit.Poly.js"></script>
+        <script src="/static/Leaflet.draw-master/src/edit/handler/Edit.SimpleShape.js"></script>
+        <script src="/static/Leaflet.draw-master/src/edit/handler/Edit.Circle.js"></script>
+        <script src="/static/Leaflet.draw-master/src/edit/handler/Edit.Rectangle.js"></script>
+        <script src="/static/Leaflet.draw-master/src/edit/handler/Edit.Marker.js"></script>
+
+
+
+        <!--  Leaflet.measure  -->
+        <script src="/static/leaflet.measure/leaflet.measure.js"></script>
+        <link rel="stylesheet" href="/static/leaflet.measure/leaflet.measure.css" />
+
+        <!-- Leaflet.geosearch -->
+        <script src="/static/L.GeoSearch-master/src/js/l.control.geosearch.js"></script>
+        <script src="/static/L.GeoSearch-master/src/js/l.geosearch.provider.openstreetmap.js"></script>
+        <link rel="stylesheet" href="/static/L.GeoSearch-master/src/css/l.geosearch.css" />
+
+        <!-- Leaflet.buildigns -->
+        <script src="/static/osmbuildings/dist/OSMBuildings-Leaflet.js"></script>
+
+        <!-- D3 and JQuery -->
+        <script src="/static/js/jquery-1.11.0.js"></script>  <!-- | JQUERY -->
+        <!-- <script src="/static/js/jquery-ui-1.11.4.js"></script> -->  <!-- JQUERY UI -->
+        <script src = "/static/js/d3.js"></script>
+
+        <!-- LOCATE CONTROL -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/dist/L.Control.Locate.min.css" />
+        <script src="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/dist/L.Control.Locate.min.js" ></script>
+
+
+        <!-- HEAT MAP -->
+    <!--
+        <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-heat/v0.1.0/leaflet-heat.js'></script>
+    -->
+        <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-heat/v0.1.3/leaflet-heat.js'></script> -->
+
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="/static/font-awesome-4.3.0/css/font-awesome.min.css">
+
+        <!-- MapClient -->
+        <script src='/static/writefeatures.js'></script>
+        <link href="/static/css/mapClient.css" rel="stylesheet">
+
+        <!-- Utils -->
+        <script src='/static/find-utils.js'></script>
+
+    </head>
+    <body>
+        {% csrf_token %}
+        <div id='map'> </div>
+
+        <script>
+
+            map = initMap("map",{{mapdata|safe}});
+
+            // Locate control
+            L.control.locate().addTo(map);
+
+            /**
+             *  Draw Features
+             */
+            var drawnItems = L.featureGroup().addTo(map);
+            map.addControl(new L.Control.Draw({
+                edit: { featureGroup: drawnItems } //,
+                // draw: {
+                //     polyline: false,
+                //     polygon: false,
+                //     circle: false,
+                //     rectangle: false
+                // }
+            }));
+
+            var feature_types = {
+                "marker": "Point",
+                "polygon": "Polygon",
+                "rectangle": "Polygon",
+                "circle": "Point",
+                "polyline": "LineString"
+            };
+
+            function sendFeature(id) {
+                var feature = drawnItems._layers[id];
+                if (feature.layerType == "marker") {
+                    var data = {
+                        'geom': JSON.stringify([[feature._latlng.lng, feature._latlng.lat]]),
+                        'apikey': '7q1qcqmsxnvw',
+                        'geotype': "Point",
+                        'radius': null,
+                        'name': $('#featureInfo').val(),
+                        'uuid': $('#layers').val(),
+                        'properties':  JSON.stringify({}),
+                        'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]')[0].value
+                    };
+                    var results = Utils.getRequest(
+                        '/add_feature/',
+                        data
+                    );
+                     // REFRESH LAYER
+                    map.getLayer();
+                    return results;
+                }
+                else {
+                    var data = {
+                        'geom': [],
+                        'apikey':  map.config.servers.geospatial.apikey,
+                        'geotype': feature_types[feature.layerType],
+                        'radius': null,
+                        'uuid':$('#layers').val(),
+                        'properties': JSON.stringify({'name': $('#featureInfo').val()})
+                    };
+                    for (var i = 0; i < feature._latlngs.length; i++) {
+                        data.geom.push([feature._latlngs[i].lng,feature._latlngs[i].lat])
+                    }
+                    data.geom = JSON.stringify(data.geom);
+                    var results;
+                    $.ajax({
+                        crossDomain: true,
+                        // dataType: 'jsonp',
+                        type: "POST",
+                        method: "POST",
+                        async: false,
+                        data: data,
+                        url: map.config.servers.geospatial.address + '/api/v1/layer/feature',
+                        // url: '/api/v1/add_feature_path',     // IF A PATH
+                        success: function (data) {
+                            try {
+                                results = data;
+                                if (results.success) {  console.log(results);  }
+                                else {  alert(results.message);  }
+                            }
+                            catch(err){  console.log('Error:', err);  }
+                        },
+                        error: function(xhr,errmsg,err) {
+                            console.log(xhr.status,xhr.responseText,errmsg,err);
+                        }
+                    });
+                    map.getLayer();
+                    return results;
+                }
+            }
+
+            var popup = L.popup();
+            function onMapClick(e) {
+                if (e.target.editing._enabled) {  console.log('editing enabled')  }
+                else {
+                    popup
+                        .setLatLng(e.latlng)
+                        .setContent("<input type='text' id='featureInfo'> <br> <input type='button' value='Submit Feature' onClick='sendFeature(" + e.target._leaflet_id + ")'/>")
+                        .openOn(map);
+                }
+            }
+
+            map.on('draw:created', function(event) {
+                var layer = event.layer;
+                layer.on('click', onMapClick);
+                layer.options.color='blue';
+                layer.layerType = event.layerType;
+                drawnItems.addLayer(layer);
+            });
+
+
+            // Geosearch
+            new L.Control.GeoSearch({
+                provider: new L.GeoSearch.Provider.OpenStreetMap()
+            }).addTo(map);
+
+
+            /**
+             *  User Tracking
+             */
+            var current_location_marker = false;
+            var timer;
+            var trackingLocations = {};
+
+            function startTracking() {
+                timer = window.setInterval(function() {
+                    $.getJSON(
+                        map.config.servers.machinelearning.address + '/whereami', {
+                        group: "{{group|safe}}",
+                        user: "{{username|safe}}"
+                    }, 
+                    function(data) {
+                        for (var user in data) {
+                            for (var l=0; l < data[user].length; l++) {
+                                if (!trackingLocations.hasOwnProperty(data[user][l].location)){
+                                    trackingLocations[data[user][l].location] = map.getFeature(data[user][l].location).geodata;
+                                }
+                            }
+                            var current_location = trackingLocations[data[user][0].location];
+                            if (!current_location_marker) {
+                               current_location_marker = L.marker([
+                                    current_location.geometry.coordinates[1], 
+                                    current_location.geometry.coordinates[0]
+                                ]).addTo(map).bindPopup("You are here");
+                            }
+                            else {
+                                var newLatLng = new L.LatLng(
+                                    current_location.geometry.coordinates[1], 
+                                    current_location.geometry.coordinates[0]
+                                );
+                                current_location_marker.setLatLng(newLatLng); 
+                            }
+                            map.setView(current_location_marker.getLatLng(), 18);
+                            $("select")[0].value = data[user][0].location.split(":")[0];
+                            map.getLayer();
+                        }
+                    });
+                }, 1000);
+            }
+
+            function stopTracking(){
+                window.clearInterval(timer);
+            }
+
+            $(function(){
+                $("#track").on('change', function() {
+                    if ($("#track")[0].checked) {
+                        startTracking();
+                    }
+                    else {
+                        stopTracking();
+                    }
+                });
+            })
+
+
+        </script>
+
+    </body>
+</html>
+
