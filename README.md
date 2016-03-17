@@ -7,9 +7,11 @@
 	$ sudo pip3 install django
 	$ sudo pip3 install jinja2
 
+* requires django 1.9 =<
+
 ### Setup database::
-	$ python3 manage.py makemigrations
 	$ python3 manage.py migrate
+	$ python3 manage.py makemigrations
 
 ### Create superuser::
 	$ python3 manage.py createsuperuser
