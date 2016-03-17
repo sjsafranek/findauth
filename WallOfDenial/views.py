@@ -214,9 +214,14 @@ def signup(request):
                         apikey="null",
                         owner=group)
         mlengine.save()
+        req = requests.post("http://localhost:8888/management/customer", params={"apikey":"7q1qcqmsxnvw"})
+        req = json.loads(req.json())
+        print(req)
         geoapi = GeoAPI.objects.create(
-                        url="http://52.18.218.56:8888",
-                        apikey="7q1qcqmsxnvw",
+                        # url="http://52.18.218.56:8888",
+                        # apikey="7q1qcqmsxnvw",
+                        url="http://localhost:8888",
+                        apikey=req['apikey'],
                         owner=group)
         geoapi.save()
         return redirect('/login')
