@@ -92,7 +92,7 @@ def create_user(request):
                     username=request.user.username)
         group = user.groups.all()[0]
         user.groups.add(group)
-    return redirect('/find/management')
+    return redirect('/management')
 
 @login_required(login_url='/find/')
 def create_layer(request):
@@ -109,13 +109,14 @@ def create_layer(request):
             raise ValueError(req.text)
         print(req.text)
         res = json.loads(req.json())
+        # res = req.json()
         ds = res["datasource"]
         layer = Layer.objects.create(
                     name=request.POST["name"],
                     uuid=ds,
                     owner=group)
         layer.save()
-        return redirect('/find/management')
+        return redirect('/management')
 
 @login_required(login_url='/find/')
 def delete_layer(request):
@@ -145,7 +146,7 @@ def create_baselayer(request):
                         url=request.POST["url"],
                         owner=group)
         baselayer.save()
-        return redirect('/find/management')
+        return redirect('/management')
 
 def get_user_data(request):
     if request.method == "GET":
