@@ -200,7 +200,6 @@ def signup(request):
         return render(request, "signup.html")
 
     if request.method == "POST":
-        print(request.POST)
         group = Group.objects.create(name=request.POST["email"])
         user = User.objects.create_user(
                         username=request.POST["email"],
