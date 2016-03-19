@@ -223,3 +223,31 @@ def signup(request):
         return redirect('/login')
 
 
+
+@login_required(login_url='/find/')
+def tracking(request):
+    if request.method == "GET":
+        try:
+            user = User.objects.get(username=request.user.username)
+            group = user.groups.all()[0]
+            results = {
+                'username': request.user.username,
+                'group': group.name,
+                'users': [],
+                'layers': {},
+                'baselayers': {},
+                'servers': json.dumps({
+                    'gis': utils.getGeoAPI(group),
+                    'ml': utils.getMLEngine(group)
+                })
+            }
+            for user in utils.get_users_by_group(group.name):
+                results['users'].append(user.username)
+            for baselayer in utils.get_baselayers_by_group(group.name):
+                results['baselayers'][baselayer.name] = baselayer.url
+            for layer in utils.get_layers_by_group(group.name):
+                results['layers'][layer.name] = layer.uuid
+            return render(request, "map.html",results)
+        except Exception as e:
+            print(e)
+            return redirect('/error')

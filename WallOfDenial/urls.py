@@ -23,6 +23,7 @@ urlpatterns = [
     # via a dictionary used as the 3rd argument.
     url(r'^home/$', views.home),
     url(r'^management/$', views.management),
+    url(r'^tracking/$', views.tracking),
     url(r'^create_user/$', views.create_user),
     url(r'^create_layer/$', views.create_layer),
     url(r'^delete_layer/$', views.delete_layer),

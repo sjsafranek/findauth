@@ -8,12 +8,6 @@ class Layer(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(Group)
 
-# class Feature(models.Model):
-#     geoid = models.AutoField(primary_key=True)
-#     k = models.CharField(max_length=200)
-#     name = models.CharField(max_length=200)
-#     layer = models.ForeignKey(Layer)
-
 class Baselayer(models.Model):
     url = models.CharField(max_length=150)
     name = models.CharField(max_length=150)
