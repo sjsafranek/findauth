@@ -138,6 +138,7 @@ function startTracking() {
                         } else {
                             var lat = trackingLocations[userLoc].geometry.coordinates[1];
                             var lng = trackingLocations[userLoc].geometry.coordinates[0];
+                            console.log(lat,lng);
                             var newLatLng = new L.LatLng(lat, lng);
                             trackingUsers[user].setLatLng(newLatLng); 
                             trackingUsers[user]._popup.setContent(trackingLocations[userLoc].properties.name);
