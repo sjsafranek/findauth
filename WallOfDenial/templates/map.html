@@ -63,7 +63,7 @@
 var current_location_marker = false;
 var timer;
 var trackingLocations = {};
-
+var trackingUsers = {};
 
 function getFeature(datasource, k){
 //     $.getJSON(
@@ -74,6 +74,7 @@ function getFeature(datasource, k){
 //         console.log(data);
 //     });
 //     // return results;
+        var results;
         $.ajax({
             crossDomain: true,
             type: "GET",
@@ -82,7 +83,7 @@ function getFeature(datasource, k){
             dataType: 'JSON',
             success: function (data) {
                 try {
-                    console.log(data);
+                    results = data;
                 }
                 catch(err){  console.log('Error:', err);  }
             },
@@ -95,8 +96,7 @@ function getFeature(datasource, k){
                 alert(message);
             }
         });
-
-
+        return results;
 }
 
 function startTracking() {
@@ -118,11 +118,24 @@ function startTracking() {
             success: function (data) {
                 try {
                     for (var user in data.users) {
-                        var loc = data.users[user].location;
-                        var lyr = loc.split(":")[0];
-                        var feat = loc.split(":")[1];
-                        console.log(lyr,feat);
-                        getFeature(lyr, feat);
+                        var userLoc = data.users[user].location;
+                        // locations
+                        if(!trackingLocations.hasOwnProperty(userLoc)) {
+                            var lyr = userLoc.split(":")[0];
+                            var feat = userLoc.split(":")[1];
+                            var feature = getFeature(lyr, feat);
+                            trackingLocations[userLoc] = feature;
+                        }
+                        // users
+                        if(!trackingUsers.hasOwnProperty(user)) {
+                            trackingUsers[user] = L.marker(
+                                trackingLocations[userLoc].coordinates
+                            ).addTo(map).bindPopup(
+                                trackingLocations[userLoc].properties.name
+                            );
+                        }
+                        trackingUsers[user] = location;
+
                     }
                 }
                 catch(err){  console.log('Error:', err);  }
