@@ -119,6 +119,7 @@ function startTracking() {
                 try {
                     for (var user in data.users) {
                         var userLoc = data.users[user].location;
+                        console.log(user, userloc);
                         // locations
                         if(!trackingLocations.hasOwnProperty(userLoc)) {
                             var lyr = userLoc.split(":")[0];
