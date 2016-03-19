@@ -140,7 +140,7 @@ function startTracking() {
                             var lng = trackingLocations[userLoc].geometry.coordinates[0];
                             var newLatLng = new L.LatLng(lat, lng);
                             trackingUsers[user].setLatLng(newLatLng); 
-                            trackingUsers[user._popup.setContent(trackingLocations[userLoc].properties.name);
+                            trackingUsers[user]._popup.setContent(trackingLocations[userLoc].properties.name);
                         }
                     }
                 }
