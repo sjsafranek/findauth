@@ -204,7 +204,7 @@ def signup(request):
         return render(request, "signup.html")
 
     if request.method == "POST":
-        req = requests.post(gis_default_url + "/management/customer", params={"apikey":gis_default_key})
+        req = requests.post(gis_default_url + "/management/customer", params={"authkey":gis_default_key})
         req = json.loads(req.json())
         gis_apikey = req['apikey']
         # group = Group.objects.create(name=request.POST["email"])
