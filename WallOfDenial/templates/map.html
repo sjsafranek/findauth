@@ -131,13 +131,17 @@ function startTracking() {
                         if(!trackingUsers.hasOwnProperty(user)) {
                             console.log(trackingLocations[userLoc].geometry.coordinates);
                             trackingUsers[user] = L.marker(
-                                trackingLocations[userLoc].geometry.coordinates
+                                trackingLocations[userLoc].geometry.coordinates[1], trackingLocations[userLoc].geometry.coordinates[0]
                             ).addTo(map).bindPopup(
                                 trackingLocations[userLoc].properties.name
                             );
+                        } else {
+                            var lat = trackingLocations[userLoc].geometry.coordinates[1];
+                            var lng = trackingLocations[userLoc].geometry.coordinates[0];
+                            var newLatLng = new L.LatLng(lat, lng);
+                            trackingUsers[user].setLatLng(newLatLng); 
+                            trackingUsers[user._popup.setContent(trackingLocations[userLoc].properties.name);
                         }
-                        trackingUsers[user] = location;
-
                     }
                 }
                 catch(err){  console.log('Error:', err);  }
