@@ -64,21 +64,83 @@ var current_location_marker = false;
 var timer;
 var trackingLocations = {};
 
+
+function getFeature(datasource, k){
+//     $.getJSON(
+//         servers.gis.address + "/api/v1/layer/" + datasource + "/feature/" + k, {
+//         apikey: servers.gis.apikey
+//     }, 
+//     function(data) {
+//         console.log(data);
+//     });
+//     // return results;
+        $.ajax({
+            crossDomain: true,
+            type: "GET",
+            async: false,
+            url:  servers.gis.address + "/api/v1/layer/" + datasource + "/feature/" + k + "?apikey=" + servers.gis.apikey,
+            dataType: 'JSON',
+            success: function (data) {
+                try {
+                    console.log(data);
+                }
+                catch(err){  console.log('Error:', err);  }
+            },
+            error: function(xhr,errmsg,err) {
+                console.log(xhr.status,xhr.responseText,errmsg,err);
+                var message = "status: " + xhr.status + "<br>";
+                message += "responseText: " + xhr.responseText + "<br>";
+                message += "errmsg: " + errmsg + "<br>";
+                message += "Error:" + err;
+                alert(message);
+            }
+        });
+
+
+}
+
 function startTracking() {
     timer = window.setInterval(function() {
         // $.getJSON(
-        //     servers.ml + '/whereami', {
-        //     group: servers.gis.apikey,
-        //     user: username
+        //     servers.ml + '/userlocs', {
+        //     group: servers.gis.apikey
         // }, 
-        $.getJSON(
-            servers.ml + '/userlocs', {
-            group: servers.gis.apikey
-        }, 
-        function(data) {
-            console.log(data);
-            // for (var user in data) { console.log(user); }
+        // function(data) {
+        //     console.log(data);
+        // });
+
+        $.ajax({
+            crossDomain: true,
+            type: "GET",
+            async: false,
+            url:  servers.ml + '/userlocs?group=' + servers.gis.apikey,
+            dataType: 'JSON',
+            success: function (data) {
+                try {
+                    for (var user in data.users) {
+                        var loc = data.users[user].location;
+                        var lyr = loc.split(":")[0];
+                        var feat = loc.split(":")[1];
+                        console.log(lyr,feat);
+                        getFeature(lyr, feat);
+                    }
+                }
+                catch(err){  console.log('Error:', err);  }
+            },
+            error: function(xhr,errmsg,err) {
+                console.log(xhr.status,xhr.responseText,errmsg,err);
+                var message = "status: " + xhr.status + "<br>";
+                message += "responseText: " + xhr.responseText + "<br>";
+                message += "errmsg: " + errmsg + "<br>";
+                message += "Error:" + err;
+                alert(message);
+            }
         });
+
+
+
+
+
     }, 1000);
 }
 
