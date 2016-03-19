@@ -129,9 +129,9 @@ function startTracking() {
                         }
                         // users
                         if(!trackingUsers.hasOwnProperty(user)) {
-                            console.log(trackingLocations[userLoc].coordinates);
+                            console.log(trackingLocations[userLoc].geometry.coordinates);
                             trackingUsers[user] = L.marker(
-                                trackingLocations[userLoc].coordinates
+                                trackingLocations[userLoc].geometry.coordinates
                             ).addTo(map).bindPopup(
                                 trackingLocations[userLoc].properties.name
                             );
