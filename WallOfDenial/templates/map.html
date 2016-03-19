@@ -133,7 +133,7 @@ function startTracking() {
                                 trackingLocations[userLoc].properties.name
                             );
                         } else {
-                            map.removeLayer(L.geoJson(trackingLocations[userLoc]));
+                            map.removeLayer(trackingUsers[user]);
                             trackingUsers[user] = L.geoJson(trackingLocations[userLoc]).addTo(map).bindPopup(
                                 trackingLocations[userLoc].properties.name
                             );
