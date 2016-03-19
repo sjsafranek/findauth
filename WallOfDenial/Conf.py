@@ -10,6 +10,8 @@ app_config = {
     }
 }
 
-gis_default_url = "http://localhost:8888"
+# gis_default_url = "http://localhost:8888"
 gis_default_key = "7q1qcqmsxnvw"
-# gis_default = "http://52.18.218.56:8888"
+gis_default_url = "http://52.18.218.56:8888"
+ml_default_url = "http://ips.colab.duke.edu:8023"
+

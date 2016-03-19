@@ -163,7 +163,7 @@
             </div>
             <div class="panel-body">
               <form action="../create_baselayer/" enctype="multipart/form-data" method="post">
-                {% csrf_token %} <!-- CSRF token is rendered by Django in forms to avoid CSRF attacks -->
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" name="name" class="form-control" id="name">
@@ -211,8 +211,7 @@
 
 
 <script>
-  // var geoapisever = {{ geoapiserver }};
-  // var mlapisever = {{ mlapiserver }};
+
   var servers = {{servers|safe}};
 
   $(document).ready(function(){
@@ -261,9 +260,15 @@
       var url = servers.gis.address + "/map/" + layer + "?apikey=" + servers.gis.apikey;
       console.log("view:", url);
       window.open(url, '_blank');
-//<a href="http://www.w3schools.com" target="_blank">Visit W3Schools.com!</a> 
-
     }).css('cursor', 'pointer');
+
+    $("#ml").click(function(){
+      var layer = $(this).closest("li").attr("id");
+      var url = servers.ml + "/dashboard/" + servers.gis.apikey;
+      console.log("view:", url);
+      window.open(url, '_blank');
+    }).css('cursor', 'pointer');
+
 
   });
 

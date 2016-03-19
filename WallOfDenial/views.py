@@ -208,21 +208,18 @@ def signup(request):
         group.save()
         user.save()
         user.groups.add(group)
-        mlengine = MLEngine.objects.create(
-                        url="http://52.18.218.56:8052",
-                        apikey="null",
-                        owner=group)
-        mlengine.save()
         req = requests.post(gis_default_url + "/management/customer", params={"apikey":gis_default_key})
         req = json.loads(req.json())
         geoapi = GeoAPI.objects.create(
-                        # url="http://52.18.218.56:8888",
-                        # apikey="7q1qcqmsxnvw",
-                        # url="http://localhost:8888",
                         url=gis_default_url,
                         apikey=req['apikey'],
                         owner=group)
         geoapi.save()
+        mlengine = MLEngine.objects.create(
+                        url=ml_default_url,
+                        apikey=req['apikey'],
+                        owner=group)
+        mlengine.save()
         return redirect('/login')
 
 
