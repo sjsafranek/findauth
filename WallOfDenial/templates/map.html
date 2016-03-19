@@ -136,8 +136,8 @@ function startTracking() {
                             );
                         }
                         var newLatLng = new L.LatLng(
-                                trackingLocations[userLoc].geometry.coordinates[0];
-                                trackingLocations[userLoc].geometry.coordinates[1];
+                                trackingLocations[userLoc].geometry.coordinates[1],
+                                trackingLocations[userLoc].geometry.coordinates[0]
                             );
                         trackingUsers[user].setLatLng(newLatLng); 
                         trackingUsers[user]._popup.setContent(trackingLocations[userLoc].properties.name);
