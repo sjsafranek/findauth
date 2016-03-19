@@ -129,18 +129,15 @@ function startTracking() {
                         }
                         // users
                         if(!trackingUsers.hasOwnProperty(user)) {
-                            trackingUsers[user] = L.marker(
-                                trackingLocations[userLoc].geometry.coordinates[1], trackingLocations[userLoc].geometry.coordinates[0]
-                            ).addTo(map).bindPopup(
+                            trackingUsers[user] = L.geoJson(trackingLocations[userLoc]).addTo(map).bindPopup(
+                                trackingLocations[userLoc].properties.name
+                            );
+                        } else {
+                            map.removeLayer(L.geoJson(trackingLocations[userLoc]));
+                            trackingUsers[user] = L.geoJson(trackingLocations[userLoc]).addTo(map).bindPopup(
                                 trackingLocations[userLoc].properties.name
                             );
                         }
-                        var newLatLng = new L.LatLng(
-                                trackingLocations[userLoc].geometry.coordinates[0],
-                                trackingLocations[userLoc].geometry.coordinates[1]
-                            );
-                        trackingUsers[user].setLatLng(newLatLng); 
-                        trackingUsers[user]._popup.setContent(trackingLocations[userLoc].properties.name);
                     }
                 }
                 catch(err){  console.log(err);  }
