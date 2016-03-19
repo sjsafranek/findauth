@@ -200,7 +200,12 @@ def signup(request):
         return render(request, "signup.html")
 
     if request.method == "POST":
-        group = Group.objects.create(name=request.POST["email"])
+        req = requests.post(gis_default_url + "/management/customer", params={"apikey":gis_default_key})
+        req = json.loads(req.json())
+        gis_apikey = req['apikey']
+        # group = Group.objects.create(name=request.POST["email"])
+        group = Group.objects.create(
+                        name=gis_apikey)
         user = User.objects.create_user(
                         username=request.POST["email"],
                         email=request.POST["email"],
@@ -208,16 +213,16 @@ def signup(request):
         group.save()
         user.save()
         user.groups.add(group)
-        req = requests.post(gis_default_url + "/management/customer", params={"apikey":gis_default_key})
-        req = json.loads(req.json())
+        # req = requests.post(gis_default_url + "/management/customer", params={"apikey":gis_default_key})
+        # req = json.loads(req.json())
         geoapi = GeoAPI.objects.create(
                         url=gis_default_url,
-                        apikey=req['apikey'],
+                        apikey=gis_apikey,
                         owner=group)
         geoapi.save()
         mlengine = MLEngine.objects.create(
                         url=ml_default_url,
-                        apikey=req['apikey'],
+                        apikey=gis_apikey,
                         owner=group)
         mlengine.save()
         return redirect('/login')
