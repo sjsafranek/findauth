@@ -37,6 +37,10 @@ def home(request):
             results = {
                 'username': request.user.username,
                 'group': group.name,
+                'servers': json.dumps({
+                    'gis': utils.getGeoAPI(group),
+                    'ml': utils.getMLEngine(group)
+                })
             }
             return render(request, "index.html",results)
         except Exception as e:

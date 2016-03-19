@@ -23,6 +23,19 @@
         <link rel="stylesheet" type="text/css" href="/static/sweetalert/sweetalert.css">
 
         {% block head_scripts %}{% endblock %}
+
+        <script>
+            var servers = {{servers|safe}};
+            $(document).ready(function(){
+                $("#ml").click(function(){
+                    var layer = $(this).closest("li").attr("id");
+                    var url = servers.ml + "/dashboard/" + servers.gis.apikey;
+                    console.log("view:", url);
+                    window.open(url, '_blank');
+                }).css('cursor', 'pointer');
+            });
+        </script>
+
     </head>
     <body>
         <!-- Navigation -->

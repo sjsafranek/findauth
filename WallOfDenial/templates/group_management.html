@@ -212,7 +212,7 @@
 
 <script>
 
-  var servers = {{servers|safe}};
+  // var servers = {{servers|safe}};
 
   $(document).ready(function(){
     $(".fa.fa-trash.layer").click(function(){
@@ -258,13 +258,6 @@
     $(".fa.fa-globe.view").click(function(){
       var layer = $(this).closest("li").attr("id");
       var url = servers.gis.address + "/map/" + layer + "?apikey=" + servers.gis.apikey;
-      console.log("view:", url);
-      window.open(url, '_blank');
-    }).css('cursor', 'pointer');
-
-    $("#ml").click(function(){
-      var layer = $(this).closest("li").attr("id");
-      var url = servers.ml + "/dashboard/" + servers.gis.apikey;
       console.log("view:", url);
       window.open(url, '_blank');
     }).css('cursor', 'pointer');
