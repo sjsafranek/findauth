@@ -136,14 +136,14 @@ function startTracking() {
                             );
                         }
                         var newLatLng = new L.LatLng(
-                                trackingLocations[userLoc].geometry.coordinates[1],
-                                trackingLocations[userLoc].geometry.coordinates[0]
+                                trackingLocations[userLoc].geometry.coordinates[0],
+                                trackingLocations[userLoc].geometry.coordinates[1]
                             );
                         trackingUsers[user].setLatLng(newLatLng); 
                         trackingUsers[user]._popup.setContent(trackingLocations[userLoc].properties.name);
                     }
                 }
-                catch(err){  console.log('Error:', err);  }
+                catch(err){  console.log(err);  }
             },
             error: function(xhr,errmsg,err) {
                 console.log(xhr.status,xhr.responseText,errmsg,err);
