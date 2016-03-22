@@ -3,42 +3,6 @@ from WallOfDenial.models import *
 from django.http import JsonResponse
 
 
-def register_server(*args):
-    # Check for errors in args
-    if args[0] not in ["geo","ml"]:
-        raise ValueError("Unknown server type")
-    if "http" not in args[1]:
-        print(args)
-        raise ValueError("Incorrect url formatting")
-    if len(args) == 3:
-        if type(args[2]) != str:
-            raise ValueError("apikey error")
-    # Add server
-    server = {
-        "type": args[0],
-        "url": args[1],
-        "apikey": None
-    }
-    if len(args) == 3:
-        server["apikey"] = args[2]
-    return server
-
-def get_api_server():
-    # Machine Learning
-    engines = MLEngine.objects.filter().distinct()
-    mls = []
-    for engine in engines:
-        if str(engine.url) not in mls:
-            mls.append(str(engine.url))
-    # Geospatial
-    spatial = GeoAPI.objects.filter().distinct()
-    geo = []
-    for space in spatial:
-        arr = [str(space.url),str(space.apikey)]
-        if arr not in geo:
-            geo.append(arr)
-    return mls, geo
-
 def get_customers():
     results = {}
     groups = Group.objects.filter().distinct()
@@ -54,32 +18,54 @@ def get_customers():
     return results
 
 
-def register_servers():
-    servers = []
-    ml, geo = get_api_server()
-    for m in ml:
-        server = register_server("ml",m)
-        if server not in servers:
-            servers.append(server)
-    for g in geo:
-        server = register_server("geo",g[0],g[1])
-        if server not in servers:
-            servers.append(server)
+def format_results():
+    geo_servers = []
+    ml_servers = []
+    customers = get_customers()
+    for customer in customers:
+
+        add = True
+        for server in geo_servers:
+            i = geo_servers.index(server)
+            if server['url'] == customers[customer]['geo']:
+                geo_servers[i]["customers"].append(customer)
+                add = False
+                break
+        if(add):
+            geo_servers.append({
+                "url": customers[customer]['geo'],
+                "type": "geo",
+                "customers": [customer]})
+        
+        add = True
+        for server in ml_servers:
+            i = ml_servers.index(server)
+            if server['url'] == customers[customer]['ml']:
+                ml_servers[i]["customers"].append(customer)
+                add = False
+                break
+        if(add):
+            ml_servers.append({
+                "url": customers[customer]['ml'],
+                "type": "ml",
+                "customers": [customer]})
+
+    servers = geo_servers + ml_servers
     return servers
 
+
 def server_list(request):
-    print(get_customers())
-    results = register_servers()
-    for item in results:
+    servers = format_results()
+    print(servers)
+    for item in servers:
+        i = servers.index(item)
         if item["type"] == "ml":
-            i = results.index(item)
             try:
                 req = requests.get(item["url"] + "/server.json")
-                results[i]["details"] = req.json()
+                servers[i]["details"] = req.json()
             except:
-                results[i]["details"] = "offline"
+                servers[i]["details"] = "offline"
         if item["type"] == "geo":
-            i = results.index(item)
             try:
                 req = requests.get(
                     item["url"] + "/management/profile",
@@ -87,8 +73,8 @@ def server_list(request):
                         "apikey": "iamheretoencryptdatasourcesanddrinkbeer"
                     }
                 )
-                results[i]["details"] = req.json()
+                servers[i]["details"] = req.json()
             except:
-                results[i]["details"] = "offline"
-    return JsonResponse({"results":"ok","servers":results})
+                servers[i]["details"] = "offline"
+    return JsonResponse({"results":"ok","servers":servers})
 
