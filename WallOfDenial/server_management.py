@@ -61,7 +61,7 @@ def server_list(request):
         i = servers.index(item)
         if item["type"] == "ml":
             try:
-                req = requests.get(item["url"] + "/server.json")
+                req = requests.get(item["url"] + "/status")
                 servers[i]["details"] = req.json()
             except:
                 servers[i]["details"] = "offline"
