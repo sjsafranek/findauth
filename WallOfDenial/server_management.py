@@ -39,6 +39,21 @@ def get_api_server():
             geo.append(arr)
     return mls, geo
 
+def get_customers():
+    results = {}
+    groups = Group.objects.filter().distinct()
+    for group in groups:
+        results[group.name] = {
+            "geo": None,
+            "ml": None
+        }
+        if len(group.geoapi_set.all()) == 1:
+            results[group.name]['geo'] = group.geoapi_set.all()[0].url
+        if len(group.mlengine_set.all()) == 1:
+            results[group.name]['ml'] = group.mlengine_set.all()[0].url
+    return results
+
+
 def register_servers():
     servers = []
     ml, geo = get_api_server()
@@ -53,6 +68,7 @@ def register_servers():
     return servers
 
 def server_list(request):
+    print(get_customers())
     results = register_servers()
     for item in results:
         if item["type"] == "ml":
