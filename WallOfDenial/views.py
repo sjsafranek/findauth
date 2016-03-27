@@ -28,7 +28,7 @@ from django.contrib.auth.hashers import check_password
 from jinja2 import Environment, FileSystemLoader
 env = Environment(loader=FileSystemLoader('WallOfDenial/templates'))
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def home(request):
     if request.method == "GET":
         try:
@@ -47,7 +47,7 @@ def home(request):
             print(e)
             return redirect('/error')
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def help(request):
     if request.method == "GET":
         if request.user.is_authenticated():
@@ -55,7 +55,7 @@ def help(request):
         else:
             return redirect('/login')  
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def management(request):
     if request.method == "GET":
         try:
@@ -83,7 +83,7 @@ def management(request):
             print(e)
             return redirect('/error')
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def create_user(request):
     if request.method == "POST":
         print(request.POST)
@@ -98,7 +98,7 @@ def create_user(request):
         user.groups.add(group)
     return redirect('/management')
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def create_layer(request):
     if request.method == "POST":
         user = User.objects.get(
@@ -122,7 +122,7 @@ def create_layer(request):
         layer.save()
         return redirect('/management')
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def delete_layer(request):
     if request.method == "POST":
         user = User.objects.get(
@@ -139,7 +139,7 @@ def delete_layer(request):
         Layer.objects.all().filter(uuid=ds).delete()
         return JsonResponse(json.loads(req.json()))
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def create_baselayer(request):
     if request.method == "POST":
         user = User.objects.get(
@@ -233,7 +233,7 @@ def signup(request):
 
 
 
-@login_required(login_url='/find/')
+@login_required(login_url='/')
 def tracking(request):
     if request.method == "GET":
         try:
