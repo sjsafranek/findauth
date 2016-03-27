@@ -212,7 +212,7 @@ def signup(request):
                         name=gis_apikey)
         user = User.objects.create_user(
                         username=request.POST["email"],
-                        email=request.POST["email"],
+                        # email=request.POST["email"],
                         password=request.POST["password"])
         group.save()
         user.save()
