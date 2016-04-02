@@ -41,8 +41,8 @@
 
             var map;
 
+            var baselayers = {{ baselayers|safe }};
             var servers = {{ servers|safe }};
-
             var group = "{{ group|safe}}";
             var username = "{{ username|safe }}";
 
@@ -66,37 +66,29 @@ var trackingLocations = {};
 var trackingUsers = {};
 
 function getFeature(datasource, k){
-//     $.getJSON(
-//         servers.gis.address + "/api/v1/layer/" + datasource + "/feature/" + k, {
-//         apikey: servers.gis.apikey
-//     }, 
-//     function(data) {
-//         console.log(data);
-//     });
-//     // return results;
-        var results;
-        $.ajax({
-            crossDomain: true,
-            type: "GET",
-            async: false,
-            url:  servers.gis.address + "/api/v1/layer/" + datasource + "/feature/" + k + "?apikey=" + servers.gis.apikey,
-            dataType: 'JSON',
-            success: function (data) {
-                try {
-                    results = data;
-                }
-                catch(err){  console.log('Error:', err);  }
-            },
-            error: function(xhr,errmsg,err) {
-                console.log(xhr.status,xhr.responseText,errmsg,err);
-                var message = "status: " + xhr.status + "<br>";
-                message += "responseText: " + xhr.responseText + "<br>";
-                message += "errmsg: " + errmsg + "<br>";
-                message += "Error:" + err;
-                alert(message);
+    var results;
+    $.ajax({
+        crossDomain: true,
+        type: "GET",
+        async: false,
+        url:  servers.gis.address + "/api/v1/layer/" + datasource + "/feature/" + k + "?apikey=" + servers.gis.apikey,
+        dataType: 'JSON',
+        success: function (data) {
+            try {
+                results = data;
             }
-        });
-        return results;
+            catch(err){  console.log('Error:', err);  }
+        },
+        error: function(xhr,errmsg,err) {
+            console.log(xhr.status,xhr.responseText,errmsg,err);
+            var message = "status: " + xhr.status + "<br>";
+            message += "responseText: " + xhr.responseText + "<br>";
+            message += "errmsg: " + errmsg + "<br>";
+            message += "Error:" + err;
+            alert(message);
+        }
+    });
+    return results;
 }
 
 function startTracking() {
@@ -108,7 +100,6 @@ function startTracking() {
         // function(data) {
         //     console.log(data);
         // });
-
         $.ajax({
             crossDomain: true,
             type: "GET",
@@ -126,17 +117,21 @@ function startTracking() {
                             var feat = userLoc.split(":")[1];
                             var feature = getFeature(lyr, feat);
                             trackingLocations[userLoc] = feature;
+                            trackingLocations[userLoc].properties.users = user;
+                        }
+                        else {
+                            trackingLocations[userLoc].properties.users += "\n" + user;
                         }
                         // users
                         if(!trackingUsers.hasOwnProperty(user)) {
                             trackingUsers[user] = L.geoJson(trackingLocations[userLoc]).addTo(map).bindPopup(
-                                trackingLocations[userLoc].properties.name
-                            );
+                                    trackingLocations[userLoc].properties.name + "\n" + trackingLocations[userLoc].properties.users
+                                );
                         } else {
                             map.removeLayer(trackingUsers[user]);
                             trackingUsers[user] = L.geoJson(trackingLocations[userLoc]).addTo(map).bindPopup(
-                                trackingLocations[userLoc].properties.name
-                            );
+                                    trackingLocations[userLoc].properties.name
+                                );
                         }
                     }
                 }
@@ -151,11 +146,6 @@ function startTracking() {
                 alert(message);
             }
         });
-
-
-
-
-
     }, 1000);
 }
 
