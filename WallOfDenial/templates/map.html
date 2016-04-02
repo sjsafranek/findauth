@@ -56,8 +56,13 @@
 
                 map.setView( [0,0], 1 );
 
-            });
+                var baseMaps = {};
+                for (var i in baselayers) {
+                    baseMaps[i] = L.tileLayer(baselayers[i]);
+                }
+                L.control.layers(baseMaps, {}).addTo(map);
 
+            });
 
 
 var current_location_marker = false;
