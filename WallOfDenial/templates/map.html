@@ -48,7 +48,7 @@
 
             $(function(){
 
-                map = L.map('map', {maxZoom: 22});
+                map = L.map('map', {maxZoom: 23});
 
                 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{ 
                     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | F.I.N.D.'
@@ -59,7 +59,7 @@
                 var baseMaps = {};
                 for (var i in baselayers) {
                     baseMaps[i] = L.tileLayer(baselayers[i], {
-                        maxZoom: 26
+                        maxZoom: 23
                     });
                 }
                 L.control.layers(baseMaps, {}).addTo(map);
