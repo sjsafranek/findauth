@@ -47,7 +47,7 @@
             var username = "{{ username|safe }}";
 
             $(function(){
-                
+
                 map = L.map('map', {maxZoom: 22});
 
                 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{ 
@@ -58,7 +58,9 @@
 
                 var baseMaps = {};
                 for (var i in baselayers) {
-                    baseMaps[i] = L.tileLayer(baselayers[i]);
+                    baseMaps[i] = L.tileLayer(baselayers[i], {
+                        maxZoom: 26
+                    });
                 }
                 L.control.layers(baseMaps, {}).addTo(map);
 
