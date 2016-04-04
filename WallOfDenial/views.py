@@ -32,6 +32,14 @@ env = Environment(loader=FileSystemLoader('WallOfDenial/templates'))
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+'''
+Logging -
+    logger.debug()
+    logger.info()
+    logger.warning()
+    logger.error()
+    logger.critical()
+'''
 
 @login_required(login_url='/')
 def home(request):
