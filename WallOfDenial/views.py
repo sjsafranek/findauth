@@ -28,6 +28,11 @@ from django.contrib.auth.hashers import check_password
 from jinja2 import Environment, FileSystemLoader
 env = Environment(loader=FileSystemLoader('WallOfDenial/templates'))
 
+# import the logging library
+import logging
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 @login_required(login_url='/')
 def home(request):
     if request.method == "GET":
@@ -44,7 +49,7 @@ def home(request):
             }
             return render(request, "index.html",results)
         except Exception as e:
-            print(e)
+            logger.error(e)
             return redirect('/error')
 
 @login_required(login_url='/')
@@ -80,13 +85,13 @@ def management(request):
                 results['layers'][layer.name] = layer.uuid
             return render(request, "group_management.html",results)
         except Exception as e:
-            print(e)
+            logger.error(e)
             return redirect('/error')
 
 @login_required(login_url='/')
 def create_user(request):
     if request.method == "POST":
-        print(request.POST)
+        # print(request.POST)
         user = User.objects.create_user(
                     username=request.POST["username"],
                     email=request.POST["email"],
@@ -111,7 +116,7 @@ def create_layer(request):
                     params=params)
         if req.status_code != 200:
             raise ValueError(req.text)
-        print(req.text)
+        # print(req.text)
         res = json.loads(req.json())
         # res = req.json()
         ds = res["datasource"]
@@ -156,7 +161,7 @@ def get_user_data(request):
     if request.method == "GET":
         username = request.GET["username"]
         password = request.GET["password"]
-        print(username, password)
+        # print(username, password)
         user = User.objects.get(
                     username=username)
         if check_password(password, user.password):
@@ -184,13 +189,13 @@ def get_user_data(request):
                 res = req.json()
                 c = 0
                 for feat in res['features']:
-                    print(feat['properties'].keys())
+                    # print(feat['properties'].keys())
                     if feat['geometry']['type'] == "Point" and 'name' in list(feat['properties'].keys()):
                         results['layers'][layer.uuid]["features"].append({
                             "name": feat['properties']['name'], 
                             "k": layer.uuid + ":" + str(c)
                         })
-                        print(feat)
+                        # print(feat)
                     c += 1
         else:
             results = { 'message': 'error' }
@@ -258,5 +263,6 @@ def tracking(request):
                 results['layers'][layer.name] = layer.uuid
             return render(request, "map.html",results)
         except Exception as e:
-            print(e)
+            logger.error(e)
             return redirect('/error')
+

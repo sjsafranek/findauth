@@ -56,7 +56,7 @@ def format_results():
 
 def server_list(request):
     servers = format_results()
-    print(servers)
+    # print(servers)
     for item in servers:
         i = servers.index(item)
         if item["type"] == "ml":

@@ -29,7 +29,6 @@ urlpatterns = [
     url(r'^delete_layer/$', views.delete_layer),
     url(r'^create_baselayer/$', views.create_baselayer),
     # url(r'^delete_baselayer/$', views.delete_baselayer),
-    
     url(r'^servers/$', server_management.server_list),
     url(r'^get_user_data/$', views.get_user_data),
 ]
