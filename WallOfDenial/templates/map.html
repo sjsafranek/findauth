@@ -109,30 +109,34 @@ function sendFeature(){
     } else {
         var payload = newLocationMarker.toGeoJSON();
         payload.properties = {"name": $("#newLocationName").val()};
+        var now = new Date();
+        if (!payload.properties.hasOwnProperty("date_created")) {
+            payload.properties.date_created = now.toISOString();
+        }
+        if (!payload.properties.hasOwnProperty("date_modified")) {
+            payload.properties.date_modified = now.toISOString();
+        }
         console.log(payload);
-    // $.ajax({
-    //     crossDomain: true,
-    //     type: "GET",
-    //     async: false,
-    //     url:  servers.gis.address + "/api/v1/layer/" + datasource + "/feature?apikey=" + servers.gis.apikey,
-    //     dataType: 'JSON',
-    //     success: function (data) {
-    //         try {
-    //             results = data;
-    //         }
-    //         catch(err){  console.log('Error:', err);  }
-    //     },
-    //     error: function(xhr,errmsg,err) {
-    //         console.log(xhr.status,xhr.responseText,errmsg,err);
-    //         var message = "status: " + xhr.status + "<br>";
-    //         message += "responseText: " + xhr.responseText + "<br>";
-    //         message += "errmsg: " + errmsg + "<br>";
-    //         message += "Error:" + err;
-    //         alert(message);
-    //     }
-    // });
+        // Send request
 
+        
 
+        // $.ajax({
+        //     crossDomain: true,
+        //     type: "POST",
+        //     async: false,
+        //     data:  JSON.stringify(payload),
+        //     url: '/api/v1/layer/' + $('#layers').val() + "/feature?apikey=" + servers.gis.apikey,
+        //     dataType: 'JSON',
+        //     success: function (data) {
+        //         console.log(data)
+        //     },
+        //     error: function(xhr,errmsg,err) {
+        //         throw new Error(errmsg);
+        //     }
+        // });
+
+    }
 
 
     }
@@ -159,12 +163,7 @@ function getFeature(datasource, k){
             catch(err){  console.log('Error:', err);  }
         },
         error: function(xhr,errmsg,err) {
-            console.log(xhr.status,xhr.responseText,errmsg,err);
-            var message = "status: " + xhr.status + "<br>";
-            message += "responseText: " + xhr.responseText + "<br>";
-            message += "errmsg: " + errmsg + "<br>";
-            message += "Error:" + err;
-            alert(message);
+            throw new Error(errmsg);
         }
     });
     return results;
@@ -217,12 +216,7 @@ function startTracking() {
                 catch(err){  console.log(err);  }
             },
             error: function(xhr,errmsg,err) {
-                console.log(xhr.status,xhr.responseText,errmsg,err);
-                var message = "status: " + xhr.status + "<br>";
-                message += "responseText: " + xhr.responseText + "<br>";
-                message += "errmsg: " + errmsg + "<br>";
-                message += "Error:" + err;
-                alert(message);
+                throw new Error(errmsg);
             }
         });
     }, 1000);
