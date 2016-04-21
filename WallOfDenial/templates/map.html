@@ -104,7 +104,38 @@
 
 
 function sendFeature(){
-    console.log($("#newLocationName").val());
+    if ($("#newLocationName").val() == ""){
+        throw new Error("No location name!");
+    } else {
+        var payload = newLocationMarker.toGeoJSON();
+        payload.properties = {"name": $("#newLocationName").val()};
+        console.log(payload);
+    // $.ajax({
+    //     crossDomain: true,
+    //     type: "GET",
+    //     async: false,
+    //     url:  servers.gis.address + "/api/v1/layer/" + datasource + "/feature?apikey=" + servers.gis.apikey,
+    //     dataType: 'JSON',
+    //     success: function (data) {
+    //         try {
+    //             results = data;
+    //         }
+    //         catch(err){  console.log('Error:', err);  }
+    //     },
+    //     error: function(xhr,errmsg,err) {
+    //         console.log(xhr.status,xhr.responseText,errmsg,err);
+    //         var message = "status: " + xhr.status + "<br>";
+    //         message += "responseText: " + xhr.responseText + "<br>";
+    //         message += "errmsg: " + errmsg + "<br>";
+    //         message += "Error:" + err;
+    //         alert(message);
+    //     }
+    // });
+
+
+
+
+    }
 }
 
 
