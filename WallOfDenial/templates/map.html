@@ -94,6 +94,8 @@
                         newLocationMarker = L.marker([e.latlng.lat, e.latlng.lng], {
                             draggable: true
                         }).addTo(map);
+                        var popupContent = "<div class='button' value='Submit Feature' onClick='sendFeature()'><h4>Submit Feature</h4><div>";
+                        newLocationMarker.bindPopup(popupContent).openPopup();
                     }
                 });
 
