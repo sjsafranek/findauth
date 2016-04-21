@@ -85,11 +85,15 @@
 
                 map.on("click", function(e){
                     console.log($("#newLocation")[0].checked, e);
-                    if (newLocationMarker) {
+                    if (!$("#newLocation")[0].checked) {
                         map.removeLayer(newLocationMarker);
                         newLocationMarker = null;
+                    } else if (newLocationMarker) {
+                        newLocationMarker.setLatLng(L.latLng(e.latlng.lat, e.latlng.lng));
                     } else {
-                        newLocationMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+                        newLocationMarker = L.marker([e.latlng.lat, e.latlng.lng], {
+                            draggable: true
+                        }).addTo(map);
                     }
                 });
 
