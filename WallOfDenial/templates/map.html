@@ -64,6 +64,24 @@
                 }
                 L.control.layers(baseMaps, {}).addTo(map);
 
+
+                trackingControl = L.control({position: 'bottomright'});
+                trackingControl.onAdd = function () {
+                    var div = L.DomUtil.create('div');
+                    div.innerHTML = '<div><input type="checkbox" id="tracking"> Track<br></div>';
+                    return div;
+                };
+                trackingControl.addTo(map);
+
+                $("#track").on('change', function() {
+                    if ($("#track")[0].checked) {
+                        startTracking();
+                    }
+                    else {
+                        stopTracking();
+                    }
+                });
+
             });
 
 
@@ -160,20 +178,20 @@ function stopTracking(){
     window.clearInterval(timer);
 }
 
-$(function(){
-    $("#track").on('change', function() {
-        if ($("#track")[0].checked) {
-            startTracking();
-        }
-        else {
-            stopTracking();
-        }
-    });
-})
+// $(function(){
+//     $("#track").on('change', function() {
+//         if ($("#track")[0].checked) {
+//             startTracking();
+//         }
+//         else {
+//             stopTracking();
+//         }
+//     });
+// })
 
 
 
-startTracking();
+// startTracking();
 
 
 
