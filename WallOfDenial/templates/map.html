@@ -63,7 +63,7 @@
                 geojsonLayerControl = L.control({position: 'topright'});
                 geojsonLayerControl.onAdd = function () {
                     var div = L.DomUtil.create('div', 'info legend');
-                    div.innerHTML += '<i class="fa fa-search-plus" id="zoom" style="padding-left:5px; margin-right:0px;"></i><select name="geojson" id="layers"></select>';
+                    div.innerHTML += '<select name="geojson" id="layers"></select>';
                     return div;
                 };
                 geojsonLayerControl.addTo(map);
@@ -103,7 +103,6 @@
                 });
 
                 map.on("click", function(e){
-                    console.log($("#createNewLocation")[0].checked, e);
                     if (!$("#createNewLocation")[0].checked) {
                         map.removeLayer(newLocationMarker);
                         newLocationMarker = null;
