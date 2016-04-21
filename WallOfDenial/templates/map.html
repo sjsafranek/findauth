@@ -82,8 +82,8 @@
                     }
                 });
 
-                map.on("click", function(){
-                    console.log($("#newLocation")[0].checked);
+                map.on("click", function(e){
+                    console.log($("#newLocation")[0].checked, e);
                 });
 
             });
