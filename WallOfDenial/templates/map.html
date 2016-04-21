@@ -58,6 +58,23 @@
 
                 map.setView( [0,0], 1 );
 
+
+                // GEOJSON LAYERS
+                geojsonLayerControl = L.control({position: 'topright'});
+                geojsonLayerControl.onAdd = function () {
+                    var div = L.DomUtil.create('div', 'info legend');
+                    div.innerHTML += '<i class="fa fa-search-plus" id="zoom" style="padding-left:5px; margin-right:0px;"></i><select name="geojson" id="layers"></select>';
+                    return div;
+                };
+                geojsonLayerControl.addTo(map);
+                for (var _i in vectorlayers) {
+                    var obj = document.createElement('option');
+                    obj.value = vectorlayers[_i];
+                    obj.text = _i;
+                    $('#layers').append(obj);
+                }
+
+                // BASEMAPS
                 var baseMaps = {};
                 for (var i in baselayers) {
                     baseMaps[i] = L.tileLayer(baselayers[i], {
