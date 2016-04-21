@@ -45,6 +45,7 @@
             var servers = {{ servers|safe }};
             var group = "{{ group|safe}}";
             var username = "{{ username|safe }}";
+            var newLocationMarker = null;
 
             $(function(){
 
@@ -84,6 +85,12 @@
 
                 map.on("click", function(e){
                     console.log($("#newLocation")[0].checked, e);
+                    if (newLocationMarker) {
+                        map.removeLayer(newLocationMarker);
+                        newLocationMarker = null;
+                    } else {
+                        newLocationMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+                    }
                 });
 
             });
