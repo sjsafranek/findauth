@@ -69,7 +69,8 @@
                 trackingControl.onAdd = function () {
                     var div = L.DomUtil.create('div', 'info legend');
                     div.innerHTML = '<div><input type="checkbox" id="track"> Track<br>';
-                    div.innerHTML += '<input type="checkbox" id="newLocation"> New Locations</div>';
+                    div.innerHTML += '<input type="checkbox" id="createNewLocation"> New Locations <br>';
+                    div.innerHTML += '<input type="text" id="newLocationName"></div>';
                     return div;
                 };
                 trackingControl.addTo(map);
@@ -84,8 +85,8 @@
                 });
 
                 map.on("click", function(e){
-                    console.log($("#newLocation")[0].checked, e);
-                    if (!$("#newLocation")[0].checked) {
+                    console.log($("#createNewLocation")[0].checked, e);
+                    if (!$("#createNewLocation")[0].checked) {
                         map.removeLayer(newLocationMarker);
                         newLocationMarker = null;
                     } else if (newLocationMarker) {
@@ -100,6 +101,11 @@
                 });
 
             });
+
+
+function sendFeature(){
+    console.log($("#newLocationName").val());
+}
 
 
 var current_location_marker = false;
