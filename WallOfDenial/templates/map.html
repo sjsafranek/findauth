@@ -64,12 +64,11 @@
                 }
                 L.control.layers(baseMaps, {}).addTo(map);
 
-
                 trackingControl = L.control({position: 'bottomright'});
                 trackingControl.onAdd = function () {
                     var div = L.DomUtil.create('div', 'info legend');
                     div.innerHTML = '<div><input type="checkbox" id="track"> Track<br>';
-                    div.innerHTML += '<br><input type="checkbox" id="newLocation"> New Locations</div>';
+                    div.innerHTML += '<input type="checkbox" id="newLocation"> New Locations</div>';
                     return div;
                 };
                 trackingControl.addTo(map);
@@ -81,6 +80,10 @@
                     else {
                         stopTracking();
                     }
+                });
+
+                map.on("click", function(){
+                    console.log($("#newLocation")[0].checked);
                 });
 
             });
