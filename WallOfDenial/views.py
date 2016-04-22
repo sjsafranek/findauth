@@ -141,8 +141,32 @@ def delete_layer(request):
         user = User.objects.get(
                     username=request.user.username)
         group = user.groups.all()[0]
-        apiserver = utils.getGeoAPI(group)
         ds = request.POST['layer']
+        apiserver = utils.getGeoAPI(group)
+        machinelearning = utils.getMLEngine(group)
+
+        params = {"apikey": apiserver['apikey']}
+        req = requests.get(
+                    apiserver['address'] + "/api/v1/layer/" + ds, 
+                    params=params)
+        if req.status_code != 200:
+            raise ValueError(req.text)
+        res = req.json()
+        # 
+        c = 0
+        for feat in res['features']:
+            if feat['geometry']['type'] == "Point" and 'name' in list(feat['properties'].keys()):
+                params = {
+                    "group": group, 
+                    "names": ds + ":" + str(c)
+                }
+                req = requests.delete(
+                    machinelearning['address'] + "/locations", 
+                    params=params)
+                if req.status_code > 499:
+                    raise ValueError(req.text)
+            c += 1
+        # 
         params = {"apikey": apiserver['apikey']}
         req = requests.delete(
                     apiserver['address'] + "/api/v1/layer/" + ds, 
