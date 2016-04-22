@@ -76,17 +76,7 @@
                 }
 
                 $("#layers").on("change", function(){
-                    getLayer($("#layers").val(), function(error, result){
-                        if (error) {
-                            throw error;
-                        } else {
-                            if (geojsonLayer) {
-                                map.removeLayer(geojsonLayer);
-                            }
-                            geojsonLayer = L.geoJson(result);
-                            geojsonLayer.addTo(map);
-                        }
-                    });
+                    changeLayer($("#layers").val());
                 });
 
 
@@ -137,6 +127,20 @@
             });
 
 
+
+function changeLayer(datasource) {
+    getLayer(datasource, function(error, result){
+        if (error) {
+            throw error;
+        } else {
+            if (geojsonLayer) {
+                map.removeLayer(geojsonLayer);
+            }
+            geojsonLayer = L.geoJson(result);
+            geojsonLayer.addTo(map);
+        }
+    });
+}
 
 function getLayer(datasource, callback){
     var results;
