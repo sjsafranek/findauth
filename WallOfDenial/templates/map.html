@@ -84,6 +84,7 @@
                                 map.removeLayer(geojsonLayer);
                             }
                             geojsonLayer = L.geoJson(result);
+                            geojsonLayer.addTo(map);
                         }
                     });
                 });
