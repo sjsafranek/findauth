@@ -144,7 +144,7 @@ def delete_layer(request):
         ds = request.POST['layer']
         apiserver = utils.getGeoAPI(group)
         machinelearning = utils.getMLEngine(group)
-
+        print(machinelearning['address'] + "/locations")
         params = {"apikey": apiserver['apikey']}
         req = requests.get(
                     apiserver['address'] + "/api/v1/layer/" + ds, 
