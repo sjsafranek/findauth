@@ -136,20 +136,20 @@ function sendFeature(){
         console.log(payload);
         // Send request
 
-        // $.ajax({
-        //     crossDomain: true,
-        //     type: "POST",
-        //     async: false,
-        //     data:  JSON.stringify(payload),
-        //     url: '/api/v1/layer/' + $('#layers').val() + "/feature?apikey=" + servers.gis.apikey,
-        //     dataType: 'JSON',
-        //     success: function (data) {
-        //         console.log(data)
-        //     },
-        //     error: function(xhr,errmsg,err) {
-        //         throw new Error(errmsg);
-        //     }
-        // });
+        $.ajax({
+            crossDomain: true,
+            type: "POST",
+            async: false,
+            data:  JSON.stringify(payload),
+            url: servers.gis.address + '/api/v1/layer/' + $('#layers').val() + "/feature?apikey=" + servers.gis.apikey,
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data)
+            },
+            error: function(xhr,errmsg,err) {
+                throw new Error(errmsg);
+            }
+        });
 
     }
 
