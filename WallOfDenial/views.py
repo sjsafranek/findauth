@@ -145,7 +145,7 @@ def delete_layer(request):
         apiserver = utils.getGeoAPI(group)
         machinelearning = utils.getMLEngine(group)
 
-        logger.info(machinelearning['address'] + "/locations")        
+        # logger.info(machinelearning + "/locations")        
 
         params = {"apikey": apiserver['apikey']}
         req = requests.get(
@@ -163,7 +163,7 @@ def delete_layer(request):
                     "names": ds + ":" + str(c)
                 }
                 req = requests.delete(
-                    machinelearning['address'] + "/locations", 
+                    machinelearning + "/locations", 
                     params=params)
                 if req.status_code > 499:
                     raise ValueError(req.text)
