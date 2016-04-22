@@ -74,6 +74,17 @@
                     $('#layers').append(obj);
                 }
 
+                $("#layers").on("change", function(){
+                    getLayer($("#layers"), function(error, result){
+                        if (error) {
+                            throw error;
+                        } else {
+                            console.log(result);
+                        }
+                    });
+                });
+
+
                 // BASEMAPS
                 var baseMaps = {};
                 for (var i in baselayers) {
@@ -117,7 +128,31 @@
                     }
                 });
 
+
             });
+
+
+
+function getLayer(datasource, callback){
+    var results;
+    $.ajax({
+        crossDomain: true,
+        type: "GET",
+        async: false,
+        url:  servers.gis.address + "/api/v1/layer/" + datasource + "?apikey=" + servers.gis.apikey,
+        dataType: 'JSON',
+        success: function (data) {
+            callback(null, data)
+        },
+        error: function(xhr,errmsg,err) {
+            return callback(new Error(errmsg));
+        }
+    });
+}
+
+
+
+
 
 
 function sendFeature(){
@@ -184,13 +219,6 @@ function getFeature(datasource, k){
 
 function startTracking() {
     timer = window.setInterval(function() {
-        // $.getJSON(
-        //     servers.ml + '/userlocs', {
-        //     group: servers.gis.apikey
-        // }, 
-        // function(data) {
-        //     console.log(data);
-        // });
         $.ajax({
             crossDomain: true,
             type: "GET",
@@ -239,20 +267,6 @@ function stopTracking(){
     window.clearInterval(timer);
 }
 
-// $(function(){
-//     $("#track").on('change', function() {
-//         if ($("#track")[0].checked) {
-//             startTracking();
-//         }
-//         else {
-//             stopTracking();
-//         }
-//     });
-// })
-
-
-
-// startTracking();
 
 
 
